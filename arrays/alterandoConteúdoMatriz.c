@@ -42,8 +42,9 @@ por 14, permanecendo assim na mesma posição.
 
 /*
 No exemplo a seguir deseja-se fazer a soma dos elementos das matrizes, isto é, o primeiro elemento da mat1 com 
-o primeiro da mat2 e assim por diante. Salvando esses elementos na mat3, ou seja, quer percorrer as matrizes.
-Sabe-se que mat1, mat2 e mat3 possuem o mesmo tamanho, então usa-se o primeiro for para percorrer.
+o primeiro da mat2 e assim por diante. Salvando esses elementos na mat3, ou seja, objetiva-se percorrer as 
+matrizes para fazer essa operação. Sabe-se que mat1, mat2 e mat3 possuem o mesmo tamanho, então usa-se o primei-
+ro for para percorrer.
 */
 
 int main () {
@@ -58,7 +59,7 @@ int main () {
         for (j = 0; j < 3; j++) {
             mat3[i][j] = mat1[i][j] + mat2[i][j]; 
             /*
-            ou seja, informa o nome das matrizes que deseja-se acessar e os índices de linha e coluna.
+            Ou seja, informa o nome das matrizes que deseja-se acessar e os índices de linha e coluna.
             O primeiro elemento da mat1 será somado com o primeiro elemento da mat2 e colocar na primeira
             posição da mat3, fazendo assim para todos.
             */
