@@ -28,10 +28,12 @@ int main () {
 
 }
 
-// O programa pode ser otimizado desta forma: sabe-se que o usuário ao informar o valor, ele não saberá qual é o elemento
-// que está sendo inserido, se é o quinto ou o oitavo... Então pode ser feito assim no primeiro for: 
+/*
+    O programa pode ser otimizado desta forma: sabe-se que o usuário ao informar o valor, ele não saberá qual é
+    o elemento
+    que está sendo inserido, se é o quinto ou o oitavo... Então pode ser feito assim no primeiro for: 
 
-/*    for (i = 0; i < 10; i++) {
+    for (i = 0; i < 10; i++) {
         printf("Digite o elemento da posição %d: ", i);
         scanf("%d", &num2[i]); 
     }
