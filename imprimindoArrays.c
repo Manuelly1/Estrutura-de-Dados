@@ -3,9 +3,9 @@
 
 // Como imprimir o contéudo de um array/vetor:
 
-// Primeiramente, deve-se entender que cada elemento em um vetor pode ser acessado por um índice.
-// Se o vetor possui 5 elementos, os índices para acessar esse vetor vão de 0 a 4. Sendo assim, para percorrer
-// um vetor e imprimir o seu contéudo, usa-se uma estrutura de repetição.
+// Antes de tudo, deve-se entender que cada elemento em um vetor pode ser acessado por um índice.
+// Se o vetor possui 5 elementos, os índices para acessar esse vetor vão de 0 a 4. Sendo assim, para percorrer um vetor e
+// imprimir o seu contéudo, usa-se uma estrutura de repetição.
 
 int main () {
 
@@ -22,13 +22,24 @@ int main () {
 
     // lembrando que tem que ser i < n - 1, ou seja, até o tamanho do vetor - 1, uma vez que começa em 0
     
-    for (i = 0; i < 5; i++) {
-    
-        printf("%d", num2[i]); //assim, "i" vai assumir valores de 0 a 4
-    
+    // imprimindo o vetor num2:
+    for (i = 0; i < 5; i++) {    
+        printf("%d", num2[i]); //assim, "i" vai assumir valores de 0 a 4    
     }
 
-    
+    printf("\n\n");
+
+    // imprimindo o vetor vogais:
+    for(i = 0; i < 5; i++) {
+        printf("%c", vogais[i]);
+    }
+
+    printf("\n\n");
+
+    // imprimindo as notas:
+    for(i = 0; i < 3; i++) {
+        printf("%.2f", notas[i]);
+    }
 
     return 0;
 
