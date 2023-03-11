@@ -3,12 +3,6 @@
 
 // Como ler uma matriz a partir do teclado:
 
-/* 
-
-
-*/
-
-
 int main () {
 
     int i, j;
