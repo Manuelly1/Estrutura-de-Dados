@@ -72,7 +72,7 @@ int main() {
             gettimeofday(&b, NULL);
 
             for (i = 0; i < n; i++) {
-                v[i] = rand() % ((100-0+1) + 1); // Gerar números entre 0 e 100
+                v[i] = rand() % ((100-0+1) + 1); 
             }
             distribution_sort(v, n);
             gettimeofday(&a, NULL);
