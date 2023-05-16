@@ -65,6 +65,16 @@ int *distribution_sort(int *v, int n) {
     return y;
 }
 
+int *vetor (unsigned int n){ 
+    int *v =  (int*)malloc(n*sizeof(int));
+    for(int i = 0; i < n; i++){ 
+        v[i] = rand() % n;
+    }
+  
+    return v;
+
+}
+
 
 int main(void) {
     int i, j;
@@ -96,12 +106,3 @@ int main(void) {
 }
 
 
-int *vetor (unsigned int n){ 
-    int *v =  (int*)malloc(n*sizeof(int));
-    for(int i = 0; i < n; i++){ 
-        v[i] = rand() % n;
-    }
-  
-    return v;
-
-}

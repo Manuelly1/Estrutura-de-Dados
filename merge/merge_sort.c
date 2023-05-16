@@ -3,7 +3,6 @@
 #include <time.h>
 #include <sys/time.h>
 
-int *vetor (unsigned int n);
 void merge_sort(int *V, int s, int e);
 void merge(int *V, int s, int e, int m);
 
@@ -38,38 +37,26 @@ void merge(int *V, int s, int e, int m) {
     free(M);
 }
 
-int main(void) {
-    int i, j;
-    int*v;
-	long int tempo;
-	struct timeval a, b;
-	srand(time(NULL));
-	for (i = 0; i <= 10000; i += 1000){
-		tempo = 0;
-		
-        for (j=0; j < 100; j ++){
-			v = vetor(i);
-			gettimeofday(&b, NULL);
-			merge_sort(v,0,i); 
-			gettimeofday(&a, NULL);
-			tempo = tempo + (((a.tv_sec * 1000000)+ a.tv_usec) - ((b.tv_sec * 1000000) + b.tv_usec));			
-		}
-		printf("%d  %f\n", i,tempo/100.0);
-		free(v);
-	}
+int main(int argc, char **argv) {
+    struct timespec a, b;
+    unsigned int t, n;
+    int i, *v;
+
+    n = atoi(argv[1]);
+    v = (int *) malloc(n * sizeof(int));
+    srand(time(NULL));
+    for (i = 0; i < n; i++)
+        v[i] = rand();
+
+    clock_gettime(CLOCK_MONOTONIC, &b);
+    merge_sort(v, n, n-1);
+    clock_gettime(CLOCK_MONOTONIC, &a);
+
+    t = (a.tv_sec * 1e9 + a.tv_nsec) - (b.tv_sec * 1e9 + b.tv_nsec);
+
+    printf("%u\n", t);
+
+    free(v);
 
     return 0;
-
-}
-
-
-int *vetor (unsigned int n){
- 
-    int *v =  (int*)malloc(n*sizeof(int));
-    for(int i = 0; i < n; i++){ 
-        v[i] = rand() % n;
-    }
-  
-    return v;
-
 }

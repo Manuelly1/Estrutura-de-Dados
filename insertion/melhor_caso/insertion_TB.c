@@ -4,7 +4,6 @@
 #include <time.h>
 
 void insertion_sort(int *v, int n);
-int *vetor (unsigned int i);
 
 void insertion_sort(int *v, int n){
     int i, j, aux;
@@ -17,41 +16,29 @@ void insertion_sort(int *v, int n){
             j--;
         }
     }     
-}    
+}   
 
-int main(void) {
-    int i, j;
-    int*v;
-	long int tempo;
-	struct timeval a, b;
-	srand(time(NULL));
-	for (i = 0; i <= 10000; i += 1000){
-		tempo = 0;
-		
-        for (j=0; j < 100; j ++){
-			v = vetor(i);
-			gettimeofday(&b, NULL);
-			insertion_sort(v, i); 
-			gettimeofday(&a, NULL);
-			tempo = tempo + (((a.tv_sec * 1000000)+ a.tv_usec) - ((b.tv_sec * 1000000) + b.tv_usec));			
-		}
-		printf("%d  %f\n", i,tempo/100.0);
-		free(v);
-	}
+
+int main(int argc, char **argv) {
+    struct timespec a, b;
+    unsigned int t, n;
+    int i, *v;
+
+    n = atoi(argv[1]);
+    v = (int *) malloc(n * sizeof(int));
+    srand(time(NULL));
+    for (i = 0; i < n; i++)
+        v[i] = i;
+
+    clock_gettime(CLOCK_MONOTONIC, &b);
+    insertion_sort(v, n);
+    clock_gettime(CLOCK_MONOTONIC, &a);
+
+    t = (a.tv_sec * 1e9 + a.tv_nsec) - (b.tv_sec * 1e9 + b.tv_nsec);
+
+    printf("%u\n", t);
+
+    free(v);
 
     return 0;
-
-}
-
-
-int *vetor (unsigned int i){
-    int posicao = 0; 
-    int *v =  (int*)malloc(i*sizeof(int));
-    
-    for(int b = 0; b < i; b--){ 
-        v[b] = b+1;
-    }
-  
-    return v;
-
 }

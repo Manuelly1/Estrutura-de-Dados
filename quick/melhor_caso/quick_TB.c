@@ -3,10 +3,8 @@
 #include <sys/time.h>
 #include <time.h>
 
-
 void quick_sort(int *v, int s, int e);
 int partition(int *v, int s, int e);
-int *vetor (unsigned int n);
 
 
 void quick_sort(int *v, int s, int e) {
@@ -38,41 +36,28 @@ int partition(int *v, int s, int e) {
 }
 
 
-int *vetor (unsigned int i){
-    int posicao = 0; 
-    int *v =  (int*)malloc(i*sizeof(int));
-    
-    for(int b = 0; b < i; b--){ 
-        v[b] = b+1;
-    }
-  
-    return v;
+int main(int argc, char **argv) {
+    struct timespec a, b;
+    unsigned int t, n;
+    int i, *v;
 
-}
+    n = atoi(argv[1]);
+    v = (int *) malloc(n * sizeof(int));
+    srand(time(NULL));
+    for (i = 0; i < n; i++)
+        v[i] = i;
 
+    clock_gettime(CLOCK_MONOTONIC, &b);
+    quick_sort(v, 0, n-1);
+    clock_gettime(CLOCK_MONOTONIC, &a);
 
-int main(void) {
-    int i, j;
-    int*v;
-	long int tempo;
-	struct timeval a, b;
-	srand(time(NULL));
-	for (i = 0; i <= 10000; i += 1000){
-		tempo = 0;
-		
-        for (j=0; j < 100; j ++){
-			v = vetor(i);
-			gettimeofday(&b, NULL);
-			quick_sort(v, 0, i-1); 
-			gettimeofday(&a, NULL);
-			tempo = tempo + (((a.tv_sec * 1000000)+ a.tv_usec) - ((b.tv_sec * 1000000) + b.tv_usec));			
-		}
-		printf("%d  %f\n", i,tempo/100.0);
-		free(v);
-	}
+    t = (a.tv_sec * 1e9 + a.tv_nsec) - (b.tv_sec * 1e9 + b.tv_nsec);
+
+    printf("%u\n", t);
+
+    free(v);
 
     return 0;
-
 }
 
 
