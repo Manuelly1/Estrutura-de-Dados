@@ -17,3 +17,9 @@ Esse projeto está sob a licença MIT.
 ---
 
 Feito por [Manuelly](https://github.com/Manuelly1)
+
+Comandos:
+gcc merge_sort.c -o merge_sort
+./merge_sort > merge_sort.txt
+gnuplot
+plot "merge_sort.txt" w l

@@ -1,6 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/time.h>
+#include <malloc.h> 
+
+int min(int *v, int n);
+int max(int *v, int n);
+int *new_0(int n);
+int *distribution_sort(int *v, int n);
+int *vetor (unsigned int n);
 
 
 int min(int *v, int n) {
@@ -58,27 +66,42 @@ int *distribution_sort(int *v, int n) {
 }
 
 
-int main(int argc, char **argv) {
-    clock_t start, end;
-    unsigned int t, n;
-    int i, *v;
+int main(void) {
+    int i, j;
+    int*v;
+	long int tempo;
+	struct timeval a, b;
+	srand(time(NULL));
+	for (i = 0; i <= 10000; i += 1000){
+		tempo = 0;
+		
+        for (j=0; j < 100; j ++){
+			v = vetor(i);
+			gettimeofday(&b, NULL);
+			distribution_sort(v,i); 
+			gettimeofday(&a, NULL);
+			tempo = tempo + (((a.tv_sec * 1000000)+ a.tv_usec) - ((b.tv_sec * 1000000) + b.tv_usec));			
+		}
+		printf("%d  %f\n", i,tempo/100.0);
 
-    n = atoi(argv[1]);
-    v = (int *) malloc(n * sizeof(int));
-    srand(time(NULL));
-    for (i = 0; i < n; i++)
-        v[i] = rand();
+        size_t allocated_size = malloc_usable_size(v);
+            printf("Tamanho de memória alocada: %zu bytes\n", allocated_size);
 
-    start = clock();
-    distribution_sort(v, n);
-    end = clock();
-
-    t = (unsigned int) ((end - start) / (double) CLOCKS_PER_SEC * 1e9);
-
-    printf("%u\n", t);
-
-    free(v);
+		free(v);
+	
+    }
 
     return 0;
-    
+
+}
+
+
+int *vetor (unsigned int n){ 
+    int *v =  (int*)malloc(n*sizeof(int));
+    for(int i = 0; i < n; i++){ 
+        v[i] = rand() % n;
+    }
+  
+    return v;
+
 }
