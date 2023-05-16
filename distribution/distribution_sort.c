@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <time.h>
+
 
 int min(int *v, int n) {
     int min_val = v[0];
@@ -23,13 +24,12 @@ int max(int *v, int n) {
 }
 
 int *new_0(int n) {
-    int *arr = (int *)malloc(n * sizeof(int));
+    int *v = (int *)malloc(n * sizeof(int));
     for (int i = 0; i < n; i++) {
-        arr[i] = 0;
+        v[i] = 0;
     }
-    return arr;
+    return v;
 }
-
 
 int *distribution_sort(int *v, int n) {
     int i, j;
@@ -58,32 +58,27 @@ int *distribution_sort(int *v, int n) {
 }
 
 
-int main() {
-    int i, j;
-    float tempo = 0;
-    struct timeval a, b;
-    FILE *fp;
-    int n = 100;
-    fp = fopen("distribution_sort.txt", "w");
+int main(int argc, char **argv) {
+    clock_t start, end;
+    unsigned int t, n;
+    int i, *v;
 
-    while (n <= 10000) {
-        int *v = (int *)malloc(n * sizeof(int));
-        for (j = 0; j < 100; j++) {
-            gettimeofday(&b, NULL);
+    n = atoi(argv[1]);
+    v = (int *) malloc(n * sizeof(int));
+    srand(time(NULL));
+    for (i = 0; i < n; i++)
+        v[i] = rand();
 
-            for (i = 0; i < n; i++) {
-                v[i] = rand() % ((100-0+1) + 1); 
-            }
-            distribution_sort(v, n);
-            gettimeofday(&a, NULL);
-            tempo = (a.tv_sec + a.tv_usec * 1e-6) - (b.tv_sec + b.tv_usec * 1e-6);
-        }
+    start = clock();
+    distribution_sort(v, n);
+    end = clock();
 
-        fprintf(fp, "%d %f\n", n, (tempo * 1e6));
-        n = n + 100;
-        free(v);
-    }
+    t = (unsigned int) ((end - start) / (double) CLOCKS_PER_SEC * 1e9);
 
-    fclose(fp);
+    printf("%u\n", t);
+
+    free(v);
+
     return 0;
+    
 }
