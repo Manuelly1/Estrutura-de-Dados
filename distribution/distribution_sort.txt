@@ -1,0 +1,22 @@
+0  0.680000
+Tamanho de memória alocada: 24 bytes
+1000  81.520000
+Tamanho de memória alocada: 4008 bytes
+2000  99.990000
+Tamanho de memória alocada: 8008 bytes
+3000  119.420000
+Tamanho de memória alocada: 12008 bytes
+4000  146.070000
+Tamanho de memória alocada: 16008 bytes
+5000  170.810000
+Tamanho de memória alocada: 20008 bytes
+6000  207.280000
+Tamanho de memória alocada: 24008 bytes
+7000  252.570000
+Tamanho de memória alocada: 28008 bytes
+8000  276.620000
+Tamanho de memória alocada: 32008 bytes
+9000  310.130000
+Tamanho de memória alocada: 36008 bytes
+10000  349.760000
+Tamanho de memória alocada: 40008 bytes
