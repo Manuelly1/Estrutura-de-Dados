@@ -3,39 +3,45 @@
 #include <time.h>
 #include <sys/time.h>
 
-void merge_sort(int *V, int s, int e);
-void merge(int *V, int s, int e, int m);
+void merge_sort(int *A, int s, int e);
+void merge(int *v, int s, int m, int e);
 
-void merge_sort(int *V, int s, int e) {
-    int m;
-    if(s < e) {
-        m = ((s+e) / 2);
-        merge_sort(V, s, m);
-        merge_sort(V, m+1, e);
-        merge(V, s, m, e);
-    }
-}
+void merge(int *v, int s, int m, int e) {
 
-void merge(int *V, int s, int e, int m) {
-    int i = s;
-    int j = m + 1;
-    int *M = (int *) malloc((e-s+1) * sizeof(int));
+    int a = s;
+    int b = m + 1;
+    int k;
+    int *w = (int *)malloc((e - s + 1) * sizeof(int));
 
-    for(int k = 0; k <= (e-s); k++) {
-        if((j>e) || ((i <= m) && (V[i] < V[j]))) {
-            M[k] = V[i];
-            i = i + 1;
+    for (k = 0; k <= (e - s); k++)
+    {
+        if (b > e || (a <= m && v[a] < v[b])) {
+            w[k] = v[a];
+            a++;
         } else {
-            M[k] = V[j];
-            j = j + 1;
+            w[k] = v[b];
+            b++;
         }
     }
-
-    for(int k = 0; k <= (e-s); k++) {
-        V[s+k] = M[k];
+    for (k = 0; k <= (e - s); k++) {
+        v[s + k] = w[k];
     }
-    free(M);
+    
+    free(w);
 }
+
+
+void merge_sort(int *A, int s, int e) {
+
+    int m;
+    if (s < e) {
+        m = (s + e) / 2;
+        merge_sort(A, s, m);
+        merge_sort(A, m + 1, e);
+        merge(A, s, m, e);
+    }
+}
+
 
 int main(int argc, char **argv) {
     struct timespec a, b;
@@ -49,7 +55,7 @@ int main(int argc, char **argv) {
         v[i] = rand();
 
     clock_gettime(CLOCK_MONOTONIC, &b);
-    merge_sort(v, n, n-1);
+    merge_sort(v, 0, n);
     clock_gettime(CLOCK_MONOTONIC, &a);
 
     t = (a.tv_sec * 1e9 + a.tv_nsec) - (b.tv_sec * 1e9 + b.tv_nsec);
@@ -59,4 +65,5 @@ int main(int argc, char **argv) {
     free(v);
 
     return 0;
+    
 }
