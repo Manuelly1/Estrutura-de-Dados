@@ -13,7 +13,6 @@ void merge_sort(int *V, int s, int e) {
     }
 }
 
-
 void merge(int *V, int s, int e, int m) {
     int i = s;
     int j = m + 1;
@@ -22,7 +21,10 @@ void merge(int *V, int s, int e, int m) {
     for(int k = 0; k <= (e-s); k++) {
         if((j>e) || ((i <= m) && (V[i] < V[j]))) {
             M[k] = V[i];
-            j = j +1;
+            i = i + 1;
+        } else {
+            M[k] = V[j];
+            j = j + 1;
         }
     }
 
@@ -32,32 +34,26 @@ void merge(int *V, int s, int e, int m) {
     free(M);
 }
 
-int main(){
-	int i,j;
-	float tempo;
-	struct timeval a, b;
-	FILE *fp;
-	int n = 100;
-    fp = fopen ("merge_sort.txt", "w");
-	
-    while(n<=10000){
-	    int v[n];
-		tempo = 0;
-		
-        for(j=0; j<100; j++){
-        gettimeofday(&b,NULL);
-         for(i=0; i<n; i++){
-		    v[i]=rand()%((100-0+1)+1);
-		}
-        
-        merge_sort(v,0,n);
-        gettimeofday(&a, NULL);
-        tempo = (a.tv_sec + a.tv_usec * 1e-6) - (b.tv_sec + b.tv_usec * 1e-6) + tempo;
-		}
-		fprintf(fp,"%d %f\n",n,(tempo*1e6)/100);
-		n=n+100;
-	}	
-	
-    return 0;
+int main(int argc, char **argv) {
+    clock_t start, end;
+    unsigned int t, n;
+    int i, *v;
 
+    n = atoi(argv[1]);
+    v = (int *) malloc(n * sizeof(int));
+    srand(time(NULL));
+    for (i = 0; i < n; i++)
+        v[i] = rand();
+
+    start = clock();
+    merge_sort(v, 0, n-1);
+    end = clock();
+
+    t = (unsigned int) ((end - start) / (double) CLOCKS_PER_SEC * 1e9);
+
+    printf("%u\n", t);
+
+    free(v);
+
+    return 0;
 }

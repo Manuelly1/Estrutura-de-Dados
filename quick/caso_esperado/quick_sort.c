@@ -31,31 +31,27 @@ int partition(int *v, int s, int e) {
     return l;
 }
 
-int main() {
-    int n = 100;
-    int i, j;
-    float tempo = 0;
-    struct timeval a, b;
-    FILE *fp;
-    fp = fopen("quick_sort.txt", "w");
+int main(int argc, char **argv) {
+    clock_t start, end;
+    unsigned int t, n;
+    int i, *v;
 
-    while(n <= 10000) {
-        int v[n];
-        for(j = 0; j < 100; j++) {
-            gettimeofday(&b, NULL);
+    n = atoi(argv[1]);
+    v = (int *) malloc(n * sizeof(int));
+    srand(time(NULL));
+    for (i = 0; i < n; i++)
+        v[i] = rand();
 
-            for(i = 0; i < n; i++) {
-                v[i] = rand() % ((100-0+1)+1); 
-            }
-            quick_sort(v, 0, n - 1);
-            gettimeofday(&a, NULL);
-            tempo = (a.tv_sec + a.tv_usec * 1e-6) - (b.tv_sec + b.tv_usec * 1e-6) + tempo;
-        }
+    start = clock();
+    quick_sort(v, 0, n-1);
+    end = clock();
 
-        fprintf(fp, "%d %f\n", n, (tempo * 1e6) / 100);
-        n = n + 100;
-    }
+    t = (unsigned int) ((end - start) / (double) CLOCKS_PER_SEC * 1e9);
 
-    fclose(fp);
+    printf("%u\n", t);
+
+    free(v);
+
     return 0;
+    
 }
