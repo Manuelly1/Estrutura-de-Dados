@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     v = (int *) malloc(n * sizeof(int));
     srand(time(NULL));
     for (i = 0; i < n; i++)
-        v[i] = n - i;
+        v[i] = i; //vetor já ordenado
 
     clock_gettime(CLOCK_MONOTONIC, &b);
     quick_sort(v, 0, n-1);
@@ -59,6 +59,5 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-
 
 

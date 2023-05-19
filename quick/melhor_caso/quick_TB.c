@@ -18,21 +18,28 @@ void quick_sort(int *v, int s, int e) {
 
 
 int partition(int *v, int s, int e) {
-    int l = s;
-    int i, aux;
-    for(i=s; i < e; i++) {
-        if(v[i] < v[e]) {
-            aux = v[i];
-            v[i] = v[l];
-            v[l] = aux;
-            l = l + 1;
-        }
-    }
-    aux = v[e];
-    v[e] = v[l];
-    v[l] = aux;
+    int pivo = v[(s + e) / 2]; // escolhe o elemento do meio como pivô
+    int i = s - 1;
+    int j = e + 1;
 
-    return l;
+    while (1) {
+        do {
+            i++;
+        } while (v[i] < pivo);
+
+        do {
+            j--;
+        } while (v[j] > pivo);
+
+        if (i >= j)
+            break;
+
+        int temp = v[i];
+        v[i] = v[j];
+        v[j] = temp;
+    }
+
+    return j;
 }
 
 
@@ -45,7 +52,7 @@ int main(int argc, char **argv) {
     v = (int *) malloc(n * sizeof(int));
     srand(time(NULL));
     for (i = 0; i < n; i++)
-        v[i] = i;
+        v[i] = n; 
 
     clock_gettime(CLOCK_MONOTONIC, &b);
     quick_sort(v, 0, n-1);
@@ -59,6 +66,5 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-
 
 

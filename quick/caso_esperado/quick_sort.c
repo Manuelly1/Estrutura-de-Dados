@@ -23,7 +23,7 @@ int partition(int *v, int s, int e) {
             aux = v[i];
             v[i] = v[l];
             v[l] = aux;
-            l = l + 1;
+            l++;
         }
     }
     aux = v[e];
@@ -57,7 +57,6 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-
 
 
 
