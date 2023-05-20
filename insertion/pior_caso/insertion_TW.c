@@ -5,16 +5,17 @@
 
 void insertion_sort(int *v, int n);
 
-void insertion_sort(int *v, int n) {
+void insertion_sort(int *v, int n){
     int i, j, aux;
     for (i = 1; i < n; i++) {
-        aux = v[i];
-
-        for(j = i - 1; (j >= 0) && (aux < v[j]); j--) {
-            v[j+1] = v[j];
+        j = i;
+        while((j > 0) && (v[j] < v[j-1])) {
+            aux = v[j];
+            v[j] = v[j-1];
+            v[j-1] = aux;
+            j--;
         }
-        v[j+1] = aux;
-    }
+    }     
 }
 
 

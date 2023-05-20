@@ -7,14 +7,11 @@ void merge_sort(int *A, int s, int e);
 void merge(int *v, int s, int m, int e);
 
 void merge(int *v, int s, int m, int e) {
-
     int a = s;
     int b = m + 1;
     int k;
     int *w = (int *)malloc((e - s + 1) * sizeof(int));
-
-    for (k = 0; k <= (e - s); k++)
-    {
+    for (k = 0; k <= (e - s); k++) {
         if (b > e || (a <= m && v[a] < v[b])) {
             w[k] = v[a];
             a++;
@@ -25,14 +22,11 @@ void merge(int *v, int s, int m, int e) {
     }
     for (k = 0; k <= (e - s); k++) {
         v[s + k] = w[k];
-    }
-    
+    }    
     free(w);
 }
 
-
 void merge_sort(int *A, int s, int e) {
-
     int m;
     if (s < e) {
         m = (s + e) / 2;

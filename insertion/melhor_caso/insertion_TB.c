@@ -9,14 +9,14 @@ void insertion_sort(int *v, int n){
     int i, j, aux;
     for (i = 1; i < n; i++) {
         j = i;
-        while((j > 0) && (v[j] > v[j+1])) {
+        while((j > 0) && (v[j] < v[j-1])) {
             aux = v[j];
             v[j] = v[j-1];
             v[j-1] = aux;
             j--;
         }
     }     
-}   
+}
 
 
 int main(int argc, char **argv) {
