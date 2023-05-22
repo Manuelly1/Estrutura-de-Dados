@@ -18,8 +18,8 @@ Esse projeto está sob a licença MIT.
 
 Feito por [Manuelly](https://github.com/Manuelly1)
 
-Comandos:
+Exemplo de como foi executado:
 gcc merge_sort.c -o merge_sort
-./merge_sort > merge_sort.txt
+./iterate.sh 100 100 100 1000 ./merge_sort merge
 gnuplot
-plot "merge_sort.txt" w l
+plot "merge.txt" w l
