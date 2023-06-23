@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+#include <sys/time.h>
+#include <math.h>
 
 // struct para caso exista colisão
 typedef struct bloco {
@@ -9,10 +13,20 @@ typedef struct bloco {
 
 // struct para a tabela
 typedef struct tabela {
-    int quant;
-    int tam;
+    int quant; // n
+    int tam; // m 
     struct bloco **lista;
 } Tabela;
+
+struct bloco* novoBloco(int valor);
+unsigned int hash(int valor, int tam);
+void inserirTabela(Tabela* tabela, Bloco* bloco);
+void removeTabela(Tabela* tabela);
+void removeBloco(Bloco* bloco);
+void exibeTabela(Tabela *tabela);
+void exibeLista(Bloco *valorAdic);
+int buscaTab(Tabela *tabela, int valor);
+void atualizaTab(Tabela *tabela);
 
 // função para criar um bloco novo
 struct bloco* novoBloco(int valor) {
@@ -32,7 +46,7 @@ void inserirTabela(Tabela* tabela, Bloco* bloco) {
 
     if(tabela->quant >= tabela->tam){
 		printf("\n Dobrando tamanho da tabela \n");
-		atualizar(tabela);
+		atualizaTab(tabela);
 	}
 
     // verificando a posição onde será inserido 
@@ -80,7 +94,7 @@ void exibeTabela(Tabela *tabela) {
     for (i = 0; i < tabela->tam; i++){
         printf("Chave: %d", i);
         printf(" --> ");
-        exibiLista(tabela->lista[i]);
+        exibeLista(tabela->lista[i]);
         printf("\n");
     }
 }
@@ -92,7 +106,6 @@ void exibeLista(Bloco *valorAdic) {
         valorAdic = valorAdic->proximo;
     }
 }
-
 
 // função para a busca
 int buscaTab(Tabela *tabela, int valor) {
@@ -107,7 +120,6 @@ int buscaTab(Tabela *tabela, int valor) {
     }
     return 0;
 }
-
 
 // função para atualizar
 void atualizaTab(Tabela *tabela) {
@@ -132,7 +144,7 @@ void atualizaTab(Tabela *tabela) {
 
 	        unsigned int posicao = hash(adicNewTab->valor, new.tam);
 
-	        Bloco *tab = novo(adicNewTab->valor);
+	        Bloco *tab = novoBloco(adicNewTab->valor);
 
 	        if(new.lista[posicao] == NULL){
 		        new.lista[posicao] = tab;
@@ -154,23 +166,55 @@ void atualizaTab(Tabela *tabela) {
 	tabela->quant = new.quant;
 }
 
+int main(int argc, char **argv) {
+    struct tree_node* root = NULL;
+    struct timespec a, b;
+    unsigned int t, n, i;
 
-int main(void) {
-    struct tabela* tabela = (struct tabela*)malloc(sizeof(struct tabela));;
-    tabela->quant = 0;
-    tabela->tam = 4;
-    tabela->lista = NULL;
+    n = atoi(argv[1]);
 
-    insert(&root, create_node(3));
-    insert(&root, create_node(2));
-    insert(&root, create_node(1));
-    // insert(&root, create_node(3));
-    // insert(&root, create_node(5));
-    // insert(&root, create_node(4));
-    // insert(&root, create_node(13));
-    // insert(&root, create_node(55));
-    // insert(&root, create_node(22));
+    srand(time(NULL));
+    
+    for (i = 0; i < n; i++) {
+        insert(&root, create_node(rand()), &root);
+    }
 
+    clock_gettime(CLOCK_MONOTONIC, &b);
+    struct tree_node** achar = search(&root, rand());
+    clock_gettime(CLOCK_MONOTONIC, &a);
+
+    t = (a.tv_sec * 1e9 + a.tv_nsec) - (b.tv_sec * 1e9 + b.tv_nsec);
+
+    printf("%u\n", t);
+    // printf("Valores da árvore: ");
+    // show(root);
+    // printf("\n");
+
+    struct tree_node* achar = search(&root, 5);
+
+    if (achar != NULL) {
+        printf("Achou.\n");
+    }
+
+    else {
+        printf("Não achou.\n");
+    }
+
+    //tree_print_dot_body(root);
+
+    // Abre o arquivo para escrita
+
+    FILE *dot_file = fopen("tree.dot", "w");
+    if (dot_file == NULL) {
+        printf("Erro ao abrir o arquivo para escrita.\n");
+        return 1;
+    }
+
+    fprintf(dot_file, "digraph G {\n node [shape=record, height=0.6, width=1.5];\n edge [arrowhead=vee, arrowsize=0.8];\n");
+    tree_print_dot_body(dot_file, root);
+    fprintf(dot_file, "}\n");
+
+    fclose(dot_file);
+    
     return 0;
 }
-
