@@ -135,11 +135,11 @@ int cas(struct tree_node* node) {
 }
 
 // Rotação à direita
-void rd(struct tree_node** node, struct tree_node** root) {
+void rd(struct tree_node** node) {
         struct tree_node* pai = (*node)->parent;
         struct tree_node* y = (*node)->lchild;
         struct tree_node* x = *node;
-        struct tree_node* b = y->rchild;
+        struct tree_node* b = y->rchild;      
 
         y->rchild = x;
         y->parent = pai;
@@ -153,16 +153,22 @@ void rd(struct tree_node** node, struct tree_node** root) {
         x->h = altura(x);
         y->h = altura(y);
 
-        // essa parte presta
-        if (y->parent == NULL) {
-            *root = y;
-        } 
+        if (y->parent != NULL) {
+            if (y->parent->value > y->value) {
+                y->parent->lchild = y;
+            }
 
+            else {
+                y->parent->rchild = y;
+            }
+        }
+
+        *node = y;
 
 }
 
 // Rotação à esquerda
-void re(struct tree_node** node, struct tree_node** root) {
+void re(struct tree_node** node) {
         struct tree_node* pai = (*node)->parent;
         struct tree_node* y = (*node)->rchild;
         struct tree_node* x = *node;
@@ -180,47 +186,55 @@ void re(struct tree_node** node, struct tree_node** root) {
         x->h = altura(x);
         y->h = altura(y);
 
-        // essa parte presta
-        if (y->parent == NULL) {
-            printf("%d", y->value);
-            printf("aaa");
-            *root = y;
+        if (y->parent != NULL) {
+            if (y->parent->value > y->value) {
+                y->parent->lchild = y;
+            }
+
+            else {
+                y->parent->rchild = y;
+            }
         }
 
-
+        *node = y;
 }
 
 // Balanceamento
-void balance(struct tree_node** node, struct tree_node** root) {
-    struct tree_node *aux = *node;
-    aux = aux->parent;
+void balance(struct tree_node* node, struct tree_node** root) {
+    node = node->parent;
         
-    while (aux != NULL) {
-        aux->h = altura(aux);
+    while (node != NULL) {
+        node->h = altura(node);
        
-        if (cdiff(aux) > 1) {
-            int c = cas(aux);
-            printf("Nó %d, Caso: %d\n", aux->value, c);
+        if (cdiff(node) > 1) {
+            int c = cas(node);
+            printf("Nó %d, Caso: %d\n", node->value, c);
             if (c == 1) {
-                rd(&aux, root);
+                rd(&node);
             } 
+
             else if (c == 2) {
-                re(&aux, root);
+                re(&node);
             } 
+
             else if (c == 3) {
-                re(&(aux->lchild), root);
-                rd(&aux, root);
+                re(&(node->lchild));
+                rd(&node);
             } 
+
             else {
-                rd(&(aux->rchild), root);
-                re(&aux, root);
+                rd(&(node->rchild));
+                re(&node);
             }
+
+            if (node->parent == NULL) {
+                *root = node;
+            } 
 
         }
 
-        printf("%p\n", aux->parent);
-
-        aux = aux->parent;
+        node = node->parent;
+        
         
     }
     
@@ -230,7 +244,7 @@ void balance(struct tree_node** node, struct tree_node** root) {
 void insert(struct tree_node** root, struct tree_node* node, struct tree_node** roota) {
     if (*root == NULL) {
         *root = node;
-        balance(root, roota);
+        balance(*root, roota);
     } 
     
     else {
@@ -280,19 +294,19 @@ void tree_print_dot_body(FILE *file, struct tree_node *r) {
 int main(void) {
     struct tree_node* root = NULL;
 
-    insert(&root, create_node(3), &root);
     insert(&root, create_node(5), &root);
+    insert(&root, create_node(7), &root);
+    insert(&root, create_node(6), &root);
+    insert(&root, create_node(1), &root);
     insert(&root, create_node(4), &root);
-    // insert(&root, create_node(5), &root);
-    // insert(&root, create_node(4), &root);
-    // insert(&root, create_node(13), &root);
-    // insert(&root, create_node(55), &root);
-    // insert(&root, create_node(22), &root);
+    insert(&root, create_node(13), &root);
+    insert(&root, create_node(55), &root);
+    insert(&root, create_node(22), &root);
     printf("Valores da árvore: ");
     show(root);
     printf("\n");
 
-    /*struct tree_node* achar = search(&root, 5);
+    struct tree_node* achar = search(&root, 5);
 
     if (achar != NULL) {
         printf("Achou.\n");
@@ -300,7 +314,7 @@ int main(void) {
 
     else {
         printf("Não achou.\n");
-    }*/
+    }
 
     //tree_print_dot_body(root);
 

@@ -84,10 +84,12 @@ void tree_print_dot_body(FILE *file, struct tree_node *r) {
     }
 }
 
+
 int main(int argc, char **argv) {
     struct tree_node* root = NULL;
+
     struct timespec a, b;
-    unsigned int t, n, i;
+    int t, n, i;
 
     n = atoi(argv[1]);
 
@@ -108,8 +110,6 @@ int main(int argc, char **argv) {
     // show(root);
     // printf("\n");
 
-    struct tree_node* achar = search(&root, 5);
-
     if (achar != NULL) {
         printf("Achou.\n");
     }
@@ -121,8 +121,7 @@ int main(int argc, char **argv) {
     //tree_print_dot_body(root);
 
     // Abre o arquivo para escrita
-
-    FILE *dot_file = fopen("tree.dot", "w");
+    FILE *dot_file = fopen("arvBin.dot", "w");
     if (dot_file == NULL) {
         printf("Erro ao abrir o arquivo para escrita.\n");
         return 1;
