@@ -23,48 +23,39 @@ void exibeTabela(Tabela *tabela);
 void exibeLista(Bloco *valorAdic);
 int buscaTab(Tabela *tabela, int valor);
 void atualizaTab(Tabela *tabela, Bloco* bloco);
+void dotHash(FILE *file, Tabela *tabela);
 
-// função para criar um bloco novo
 struct bloco* novoBloco(int valor) {
     struct bloco* bloco = (struct bloco*)malloc(sizeof(struct bloco));
     bloco->valor = valor;
     bloco->proximo = NULL;
+
     return bloco;
 }
 
-// função para adicionar na tabela
 void inserirTabela(Tabela* tabela, Bloco* bloco) {
 
     if(tabela->quant >= tabela->tam){
 		atualizaTab(tabela, bloco);
 	}
+
     else {
-    // verificando a posição onde será inserido 
         int posicao = bloco->valor % tabela->tam;
 
-        if(tabela->lista[posicao] == NULL){
-            tabela->lista[posicao] = bloco;
+        bloco->proximo = tabela->lista[posicao];
+        tabela->lista[posicao] = bloco;
 
-        }
-        else{
-            bloco->proximo = tabela->lista[posicao];
-            tabela->lista[posicao] = bloco;
-        }
-
-        tabela->quant++;
+        tabela->quant = tabela->quant + 1;;
     }
 
-    // printf("%d %d", tabela->quant, tabela->tam);
-    // getchar();
 }
 
-// funções para liberar espaço
 void removeTabela(Tabela* tabela) {
-	int i;
-	for(i = 0; i< tabela->tam; i++){
+	for(int i = 0; i < tabela->tam; i++){
 		removeBloco(tabela->lista[i]);
 		tabela->lista[i] = NULL;
 	}
+
 	tabela->quant = 0;
 	
 }
@@ -80,11 +71,8 @@ void removeBloco(Bloco* bloco) {
 
 }
 
-// funções para mostrar a tabela
 void exibeTabela(Tabela *tabela) {
-    int i;
-
-    for (i = 0; i < tabela->tam; i++){
+    for (int i = 0; i < tabela->tam; i++){
         printf("Chave: %d", i);
         printf(" --> ");
         exibeLista(tabela->lista[i]);
@@ -95,12 +83,11 @@ void exibeTabela(Tabela *tabela) {
 void exibeLista(Bloco *valorAdic) {
     while (valorAdic != NULL){
         printf("%d", valorAdic->valor);
-        printf(" ");
+        printf(" --> ");
         valorAdic = valorAdic->proximo;
     }
 }
 
-// função para a busca
 int buscaTab(Tabela *tabela, int valor) {
     int posicao;
     Bloco *list;
@@ -114,57 +101,43 @@ int buscaTab(Tabela *tabela, int valor) {
     return 0;
 }
 
-// função para atualizar
 void atualizaTab(Tabela* tabela, Bloco* bloco) {
-	int i;
-    int tam = tabela->tam;
 
-	// criando uma tabela estática auxiliar com o dobro do tamanho 
-	Tabela new;
-	new.tam = (tam * 2);
-	new.lista = malloc(sizeof(Bloco *) * new.tam);
-    new.quant = 1;
+	Tabela novTabel;
+	novTabel.tam = (tabela->tam * 2);
+	novTabel.lista = malloc(sizeof(Bloco *) * novTabel.tam);
+    novTabel.quant = 1;
 
-	// prenche os valores da tabela auxiliar como NULL 
-	for (i = 0; i < new.tam; i++){
-        new.lista[i] = NULL;
+	for (int i = 0; i < novTabel.tam; i++){
+        novTabel.lista[i] = NULL;
     }
 
-    int posicao = bloco->valor % new.tam;
+    int posicao = bloco->valor % novTabel.tam;
 
-    new.lista[posicao] = bloco;
+    novTabel.lista[posicao] = bloco;
 
-    // insere os elementos na nova tabela 
-	for (i = 0; i < tam; i++){
-    	Bloco *adicNewTab;
-	    adicNewTab = tabela->lista[i];
-	    while (adicNewTab != NULL){
+	for (int i = 0; i < tabela->tam; i++){
+    	Bloco *novBloc;
+	    novBloc = tabela->lista[i];
 
-	        int posicao = adicNewTab->valor % tabela->tam;
+	    while (novBloc != NULL){
+	        posicao = novBloc->valor % novTabel.tam;
 
-	        Bloco *tab = novoBloco(adicNewTab->valor);
+	        Bloco *tab = novoBloco(novBloc->valor);
 
-	        if(new.lista[posicao] == NULL){
-		        new.lista[posicao] = tab;
-	        }
+			tab->proximo = novTabel.lista[posicao];
+			novTabel.lista[posicao] = tab;
 
-            else{
-				tab->proximo = new.lista[posicao];
-				new.lista[posicao] = tab;
-		    }
+			novBloc = novBloc->proximo;
 
-			adicNewTab = adicNewTab->proximo;
-			new.quant++;
+			novTabel.quant = novTabel.quant + 1;
 	    }
     }
 
-    // remove as posições de memória usadas pela original 
     removeTabela(tabela);
 
-    *tabela = new;
-    tabela->lista = new.lista;
-    tabela->tam = new.tam;
-	tabela->quant = new.quant;
+    (*tabela) = novTabel;
+
 }
 
 void dotHash(FILE *file, Tabela *tabela) {
@@ -200,7 +173,6 @@ void dotHash(FILE *file, Tabela *tabela) {
     }
 }
 
-
 int main(int argc, char **argv) {
     struct timespec a, b;
     int t, n, i, achou;
@@ -218,11 +190,12 @@ int main(int argc, char **argv) {
     }
 
 	for (i = 0; i < n; i++) {
-		inserirTabela(&tabela, novoBloco(rand() % 10000));
+		inserirTabela(&tabela, novoBloco(rand()));
 	}
 
+
     clock_gettime(CLOCK_MONOTONIC, &b);
-    achou = buscaTab(&tabela, n);
+    achou = buscaTab(&tabela, rand());
     clock_gettime(CLOCK_MONOTONIC, &a);
 
     // if (achou == 1) {
@@ -233,7 +206,7 @@ int main(int argc, char **argv) {
     //     printf("Não achou.\n");
     // }
 
-    exibeTabela(&tabela);
+    //exibeTabela(&tabela);
 
     t = (a.tv_sec * 1e9 + a.tv_nsec) - (b.tv_sec * 1e9 + b.tv_nsec);
 
@@ -255,4 +228,3 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-

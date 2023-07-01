@@ -1,92 +1,84 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <unistd.h>
-#include <sys/time.h>
-#include <math.h>
 
-// Estrutura
-struct tree_node {
-   int value;
-   struct tree_node *lchild;
-   struct tree_node *rchild;
+struct noArvore {
+   int valor;
+   struct noArvore *filEsq;
+   struct noArvore *filDir;
 
 };
 
-struct tree_node** search(struct tree_node** root, int value) {
-    if ((*root) != NULL) {
-        if ((*root)->value == value) {
-            return root;
+struct noArvore** procurar(struct noArvore** raiz, int valor) {
+    if ((*raiz) != NULL) {
+        if ((*raiz)->valor == valor) {
+            return raiz;
+        }
+        else if ((*raiz)->valor > valor) {
+            return procurar(&((*raiz)->filEsq), valor);
         }
 
-        else if ((*root)->value > value) {
-            return search(&((*root)->lchild), value);
-        }
-
-        return search(&((*root)->rchild), value);
+        return procurar(&((*raiz)->filDir), valor);
     }
 
     return NULL;
 }
 
-// Mostrar árvore em ordem
-void show(struct tree_node* root) {
-    if (root != NULL) {
-        show(root->lchild);
-        printf("%d ", root->value);
-        show(root->rchild);
+void verArvore(struct noArvore* raiz) {
+    if (raiz != NULL) {
+        verArvore(raiz->filEsq);
+        printf("%d ", raiz->valor);
+        verArvore(raiz->filDir);
     }
 }
 
-// Inserir na árvore
-void insert(struct tree_node** root, struct tree_node* node, struct tree_node** roota) {
-    if (*root == NULL) {
-        *root = node;
+void inserir(struct noArvore** raiz, struct noArvore* no) {
+    if (*raiz == NULL) {
+        *raiz = no;
     } 
     
     else {
 
-        if ((*root)->value > node->value) {
-            insert(&((*root)->lchild), node, roota);
+        if ((*raiz)->valor > no->valor) {
+            inserir(&((*raiz)->filEsq), no);
         } 
         
         else {
-            insert(&((*root)->rchild), node, roota);
+            inserir(&((*raiz)->filDir), no);
         }     
     }
 }
 
 // Criar novo nó
-struct tree_node* create_node(int value) {
-    struct tree_node* node = (struct tree_node*)malloc(sizeof(struct tree_node));
-    node->value = value;
-    node->lchild = NULL;
-    node->rchild = NULL;
+struct noArvore* create_no(int valor) {
+    struct noArvore* no = (struct noArvore*)malloc(sizeof(struct noArvore));
+    no->valor = valor;
+    no->filEsq = NULL;
+    no->filDir = NULL;
     
-    return node;
+    return no;
 }
 
-void tree_print_dot_body(FILE *file, struct tree_node *r) {
+void dotTree(FILE *file, struct noArvore *r) {
     if (r != NULL) {
-        tree_print_dot_body(file, r->lchild);
+        dotTree(file, r->filEsq);
 
-        fprintf(file, "  \"%p\" [shape=record, label=\"{%p|%d|{%p|%p}}\"];\n", (void *)r, (void *)r, r->value, (void *)r->lchild, (void *)r->rchild);
+        fprintf(file, "  \"%p\" [shape=record, label=\"{%p|%d|{%p|%p}}\"];\n", (void *)r, (void *)r, r->valor, (void *)r->filEsq, (void *)r->filDir);
 
-        if (r->lchild) {
-            fprintf(file, "  \"%p\" -> \"%p\";\n", (void *)r, (void *)r->lchild);
+        if (r->filEsq) {
+            fprintf(file, "  \"%p\" -> \"%p\";\n", (void *)r, (void *)r->filEsq);
         }
 
-        if (r->rchild) {
-            fprintf(file, "  \"%p\" -> \"%p\";\n", (void *)r, (void *)r->rchild);
+        if (r->filDir) {
+            fprintf(file, "  \"%p\" -> \"%p\";\n", (void *)r, (void *)r->filDir);
         }
 
-        tree_print_dot_body(file, r->rchild);
+        dotTree(file, r->filDir);
     }
 }
 
-
 int main(int argc, char **argv) {
-    struct tree_node* root = NULL;
+    struct noArvore* raiz = NULL;
 
     struct timespec a, b;
     int t, n, i;
@@ -94,21 +86,29 @@ int main(int argc, char **argv) {
     n = atoi(argv[1]);
 
     srand(time(NULL));
+
+    int ult = 0;
     
     for (i = 0; i < n; i++) {
-        insert(&root, create_node(rand()), &root);
+        ult = rand();
+        inserir(&raiz, create_no(ult));
+
+        
     }
 
     clock_gettime(CLOCK_MONOTONIC, &b);
-    struct tree_node** achar = search(&root, rand());
+    struct noArvore** achar = procurar(&raiz, ult + 1);
     clock_gettime(CLOCK_MONOTONIC, &a);
 
     t = (a.tv_sec * 1e9 + a.tv_nsec) - (b.tv_sec * 1e9 + b.tv_nsec);
 
-    printf("%u\n", t);
+    printf("%d\n", t);
+
     // printf("Valores da árvore: ");
-    // show(root);
+    // verArvore(raiz);
     // printf("\n");
+
+    /*struct noArvore** achar = procurar(&raiz, 5);
 
     if (achar != NULL) {
         printf("Achou.\n");
@@ -116,19 +116,20 @@ int main(int argc, char **argv) {
 
     else {
         printf("Não achou.\n");
-    }
+    }*/
 
-    //tree_print_dot_body(root);
+    //dotTree(raiz);
 
     // Abre o arquivo para escrita
+
     FILE *dot_file = fopen("arvBin.dot", "w");
     if (dot_file == NULL) {
         printf("Erro ao abrir o arquivo para escrita.\n");
         return 1;
     }
 
-    fprintf(dot_file, "digraph G {\n node [shape=record, height=0.6, width=1.5];\n edge [arrowhead=vee, arrowsize=0.8];\n");
-    tree_print_dot_body(dot_file, root);
+    fprintf(dot_file, "digraph G {\n no [shape=record, height=0.6, width=1.5];\n edge [arrowhead=vee, arrowsize=0.8];\n");
+    dotTree(dot_file, raiz);
     fprintf(dot_file, "}\n");
 
     fclose(dot_file);
