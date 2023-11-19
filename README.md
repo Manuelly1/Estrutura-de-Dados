@@ -8,7 +8,7 @@ Este repositório está sendo desenvolvido a partir da linguagem:
 
 ## 💻 Repositório
 
-Este é um repositório mais didático, o qual ainda está em desenvolvimento, visto que estou compartilhando aqui acerca dos meus estudos em estrutura de dados (ED). Desta forma, os códigos terão bastante comentários para ajudar na revisão dos conceitos posteriormente.
+Este é um repositório mais didático, onde estou compartilhando aqui acerca dos meus estudos em estrutura de dados (ED). Desta forma, os códigos terão bastante comentários para ajudar na revisão dos conceitos posteriormente.
 
 ## :memo: Licença
 
